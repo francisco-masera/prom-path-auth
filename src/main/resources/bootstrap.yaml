@@ -1,0 +1,18 @@
+spring:
+  application.name: auth-svc
+  profiles:
+    active: dev
+  cloud:
+    config:
+      name: config-server
+      profile: dev
+      enabled: true
+      fail-fast: true
+      uri: http://localhost:8888
+server.port: 8081
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:8082/eureka
