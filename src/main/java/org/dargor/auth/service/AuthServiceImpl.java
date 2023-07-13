@@ -2,19 +2,16 @@ package org.dargor.auth.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dargor.auth.dto.LoginDto;
-import org.dargor.auth.dto.SignUpDto;
+import org.dargor.auth.dto.LoginRequestDto;
+import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.UserResponseDto;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
 import org.dargor.auth.util.CustomerMapper;
 import org.dargor.auth.util.TokenUtil;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import javax.persistence.EntityNotFoundException;
 
 @Service
 @Slf4j
@@ -28,19 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenUtil tokenUtil;
 
     @Override
-    public UserResponseDto login(LoginDto request) {
-        var customer = authRepository.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> {
-            log.error(String.format("User NOT %s found!", request.getEmail()));
-            return new UsernameNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
-        });
-        String token = tokenUtil.generateToken(request.getEmail());
-        var response = customerMapper.customerToUserResponse(customer, token);
-        log.info(String.format("Customer logged in successfully [request: %s] [response: %s]", request, response));
-        return response;
-    }
-
-    @Override
-    public UserResponseDto signup(SignUpDto request) {
+    public UserResponseDto signup(SignUpRequestDto request) {
         try {
             var customer = customerMapper.signUpDtoToCustomer(request);
             customer.setPassword(tokenUtil.encodePassword(customer.getPassword()));
@@ -56,18 +41,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info(String.format("Looking for user %s", username));
-        var customer = authRepository.findByEmail(username).orElseThrow(() -> {
-            log.error(String.format("User NOT %s found!", username));
-            return new UsernameNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
+    public UserResponseDto login(LoginRequestDto request) {
+        var customer = authRepository.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> {
+            log.error(String.format("User NOT %s found!", request.getEmail()));
+            return new EntityNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
         });
-        var user = new org.springframework.security.core.userdetails.User(
-                username,
-                customer.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-        );
-        log.info(String.format("User %s found!", username));
-        return user;
+        String token = tokenUtil.generateToken(request.getEmail());
+        var response = customerMapper.customerToUserResponse(customer, token);
+        log.info(String.format("Customer logged in successfully [request: %s] [response: %s]", request, response));
+        return response;
     }
+
 }

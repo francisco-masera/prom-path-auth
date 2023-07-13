@@ -1,18 +1,22 @@
 spring:
   application.name: auth-svc
-  profiles:
-    active: dev
+  profiles.active: dev
   cloud:
+    vault:
+      token: hvs.Ud1IunJLvNM2LJa7L7R7cFO7
+      authentication: token
+      uri: http://localhost:8200
+      kv:
+        default-context: auth
+        backend: secret
     config:
-      name: config-server
-      profile: dev
-      enabled: true
-      fail-fast: true
-      uri: http://localhost:8888
+      discovery:
+        service-id: config-server
+        enabled: true
 server.port: 8081
 eureka:
+  instance:
+    preferIpAddress: true
   client:
-    registerWithEureka: false
-    fetchRegistry: false
     serviceUrl:
       defaultZone: http://localhost:8082/eureka

@@ -1,14 +1,13 @@
 package org.dargor.auth.service;
 
-import org.dargor.auth.dto.LoginDto;
-import org.dargor.auth.dto.SignUpDto;
+import org.dargor.auth.dto.LoginRequestDto;
+import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.UserResponseDto;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface AuthService extends UserDetailsService {
+public interface AuthService {
 
-    UserResponseDto login(LoginDto request);
+    UserResponseDto signup(SignUpRequestDto request);
 
-    UserResponseDto signup(SignUpDto request);
+    UserResponseDto login(LoginRequestDto request);
 
 }

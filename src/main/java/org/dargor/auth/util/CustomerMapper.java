@@ -1,6 +1,6 @@
 package org.dargor.auth.util;
 
-import org.dargor.auth.dto.SignUpDto;
+import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.UserResponseDto;
 import org.dargor.auth.entity.Customer;
 import org.mapstruct.Mapper;
@@ -14,7 +14,7 @@ public interface CustomerMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "active", expression = "java(true)")
-    Customer signUpDtoToCustomer(SignUpDto signUpDto);
+    Customer signUpDtoToCustomer(SignUpRequestDto signUpDto);
 
     UserResponseDto customerToUserResponse(Customer customer, String token);
 
