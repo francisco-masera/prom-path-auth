@@ -6,7 +6,7 @@ import org.dargor.auth.dto.UserResponseDto;
 
 public interface AuthService {
 
-    UserResponseDto signup(SignUpRequestDto request);
+    UserResponseDto signUp(SignUpRequestDto request);
 
     UserResponseDto login(LoginRequestDto request);
 

@@ -3,13 +3,15 @@ spring:
   profiles.active: dev
   cloud:
     vault:
-      token: hvs.Ud1IunJLvNM2LJa7L7R7cFO7
+      token: ${VAULT_TOKEN}
       authentication: token
       uri: http://localhost:8200
       kv:
         default-context: auth
         backend: secret
     config:
+      name: auth-svc
+      profile: dev
       discovery:
         service-id: config-server
         enabled: true
@@ -19,4 +21,7 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:8082/eureka
+      defaultZone: http://localhost:8082/eureka/
+logging:
+  level:
+    root: info

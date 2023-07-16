@@ -17,16 +17,16 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @PostMapping("/sign-up")
+    public ResponseEntity<UserResponseDto> signUp(@RequestBody SignUpRequestDto request) {
+        var response = authService.signUp(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto request) {
         var response = authService.login(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/sign-up")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody SignUpRequestDto request) {
-        var response = authService.signup(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 

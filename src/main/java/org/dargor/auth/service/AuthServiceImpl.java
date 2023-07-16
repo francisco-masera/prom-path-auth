@@ -7,7 +7,7 @@ import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.UserResponseDto;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
-import org.dargor.auth.util.CustomerMapper;
+import org.dargor.auth.util.UserMapper;
 import org.dargor.auth.util.TokenUtil;
 import org.springframework.stereotype.Service;
 
@@ -20,35 +20,35 @@ public class AuthServiceImpl implements AuthService {
 
 
     private final AuthRepository authRepository;
-    private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     private final TokenUtil tokenUtil;
 
     @Override
-    public UserResponseDto signup(SignUpRequestDto request) {
+    public UserResponseDto signUp(SignUpRequestDto request) {
         try {
-            var customer = customerMapper.signUpDtoToCustomer(request);
-            customer.setPassword(tokenUtil.encodePassword(customer.getPassword()));
-            var savedCustomer = authRepository.save(customer);
+            var user = userMapper.signUpDtoToUser(request);
+            user.setPassword(tokenUtil.encodePassword(user.getPassword()));
+            var savedUser = authRepository.save(user);
             String token = tokenUtil.generateToken(request.getEmail());
-            var response = customerMapper.customerToUserResponse(savedCustomer, token);
-            log.info(String.format("Customer created successfully [request: %s] [response: %s]", request, response));
+            var response = userMapper.userToUserResponse(savedUser, token);
+            log.info(String.format("User created successfully [request: %s] [response: %s]", request, response));
             return response;
         } catch (Exception e) {
-            log.error(String.format("Error found creating customer [request: %s] [error: %s]", request.toString(), e.getMessage()));
+            log.error(String.format("Error found creating user [request: %s] [error: %s]", request.toString(), e.getMessage()));
             throw e;
         }
     }
 
     @Override
     public UserResponseDto login(LoginRequestDto request) {
-        var customer = authRepository.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> {
+        var user = authRepository.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> {
             log.error(String.format("User NOT %s found!", request.getEmail()));
             return new EntityNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
         });
         String token = tokenUtil.generateToken(request.getEmail());
-        var response = customerMapper.customerToUserResponse(customer, token);
-        log.info(String.format("Customer logged in successfully [request: %s] [response: %s]", request, response));
+        var response = userMapper.userToUserResponse(user, token);
+        log.info(String.format("User logged in successfully [request: %s] [response: %s]", request, response));
         return response;
     }
 
