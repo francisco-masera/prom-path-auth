@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,13 @@ public class ExceptionAdviser {
         var error = new ErrorResponse(String.format("%s: %s", ErrorDefinition.INVALID_FIELDS.getMessage(), errors), HttpStatus.BAD_REQUEST.value());
         log.error(String.format("Exception found with code %s for field validation didn't passed.", error.getCode()));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public final ResponseEntity<ErrorResponse> entityNotFound() {
+        var error = new ErrorResponse(ErrorDefinition.ENTITY_NOT_FOUND.getMessage(), HttpStatus.NOT_FOUND.value());
+        log.error(String.format("Exception found with code %d.", error.getCode()));
+        return new ResponseEntity<>(error, null, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

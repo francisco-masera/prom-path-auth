@@ -7,8 +7,8 @@ import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.UserResponseDto;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
-import org.dargor.auth.util.UserMapper;
 import org.dargor.auth.util.TokenUtil;
+import org.dargor.auth.util.UserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,8 +42,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDto login(LoginRequestDto request) {
-        var user = authRepository.findByEmailAndPassword(request.getEmail(), request.getPassword()).orElseThrow(() -> {
-            log.error(String.format("User NOT %s found!", request.getEmail()));
+        var user = authRepository.findByEmailAndPassword(request.getEmail(), tokenUtil.encodePassword(request.getPassword())).orElseThrow(() -> {
+            log.error(String.format("User %s NOT found!", request.getEmail()));
             return new EntityNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
         });
         String token = tokenUtil.generateToken(request.getEmail());

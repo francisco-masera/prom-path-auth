@@ -1,6 +1,5 @@
 package org.dargor.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,6 @@ public class LoginRequestDto {
     private String password;
 
     @Email
-    @JsonProperty("user")
     private String email;
 
 }

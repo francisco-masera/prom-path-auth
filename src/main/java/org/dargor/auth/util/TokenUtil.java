@@ -33,6 +33,7 @@ public class TokenUtil {
         Date exp = new Date(expMillis);
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(email)
                 .setIssuedAt(new Date(nowMillis))
                 .setExpiration(exp)
                 .setIssuer(issuer)
