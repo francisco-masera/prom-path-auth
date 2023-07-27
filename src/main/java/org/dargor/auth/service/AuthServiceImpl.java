@@ -1,43 +1,43 @@
 package org.dargor.auth.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dargor.auth.dto.LoginRequestDto;
 import org.dargor.auth.dto.SignUpRequestDto;
+import org.dargor.auth.dto.TokenResponseDto;
 import org.dargor.auth.dto.UserResponseDto;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
-import org.dargor.auth.util.TokenUtil;
+import org.dargor.auth.util.JwtUtils;
+import org.dargor.auth.util.TokenMapper;
 import org.dargor.auth.util.UserMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-
 
     private final AuthRepository authRepository;
     private final UserMapper userMapper = UserMapper.INSTANCE;
-
-    private final TokenUtil tokenUtil;
+    private final TokenMapper tokenMapper = TokenMapper.INSTANCE;
+    private final JwtUtils tokenUtil;
+    @Value("${jwt.b2b.subject}")
+    private String b2bSubject;
 
     @Override
     public UserResponseDto signUp(SignUpRequestDto request) {
-        try {
-            var user = userMapper.signUpDtoToUser(request);
-            user.setPassword(tokenUtil.encodePassword(user.getPassword()));
-            var savedUser = authRepository.save(user);
-            String token = tokenUtil.generateToken(request.getEmail());
-            var response = userMapper.userToUserResponse(savedUser, token);
-            log.info(String.format("User created successfully [request: %s] [response: %s]", request, response));
-            return response;
-        } catch (Exception e) {
-            log.error(String.format("Error found creating user [request: %s] [error: %s]", request.toString(), e.getMessage()));
-            throw e;
-        }
+        var user = userMapper.signUpDtoToUser(request);
+        user.setPassword(tokenUtil.encodePassword(user.getPassword()));
+        var savedUser = authRepository.save(user);
+        String token = tokenUtil.generateToken(request.getEmail());
+        var response = userMapper.userToUserResponse(savedUser, token);
+        log.info(String.format("User created successfully [request: %s] [response: %s]", request, response));
+        return response;
+
     }
 
     @Override
@@ -48,7 +48,15 @@ public class AuthServiceImpl implements AuthService {
         });
         String token = tokenUtil.generateToken(request.getEmail());
         var response = userMapper.userToUserResponse(user, token);
-        log.info(String.format("User logged in successfully [request: %s] [response: %s]", request, response));
+        log.info(String.format("User has successfully logged-in [request: %s] [response: %s]", request, response));
+        return response;
+    }
+
+    @Override
+    public TokenResponseDto getB2BToken() {
+        var newToken = tokenUtil.generateToken(b2bSubject);
+        var response = tokenMapper.signUpDtoToUser(newToken);
+        log.info("Token granted successfully [request: %s] [response: %s]");
         return response;
     }
 
