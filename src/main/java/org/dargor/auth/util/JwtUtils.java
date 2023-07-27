@@ -1,6 +1,5 @@
 package org.dargor.auth.util;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class TokenUtil {
+public class JwtUtils {
 
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -26,14 +25,12 @@ public class TokenUtil {
         return new BCryptPasswordEncoder(11);
     }
 
-    public String generateToken(String email) {
-        Claims claims = Jwts.claims().setSubject(email);
+    public String generateToken(String subject) {
         long nowMillis = System.currentTimeMillis();
         long expMillis = nowMillis + expiresIn;
         Date exp = new Date(expMillis);
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
+                .setSubject(subject)
                 .setIssuedAt(new Date(nowMillis))
                 .setExpiration(exp)
                 .setIssuer(issuer)
