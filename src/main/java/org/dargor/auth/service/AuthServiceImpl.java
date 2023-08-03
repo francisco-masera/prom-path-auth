@@ -21,10 +21,11 @@ import javax.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private static final UserMapper userMapper = UserMapper.INSTANCE;
+    private static final TokenMapper tokenMapper = TokenMapper.INSTANCE;
     private final AuthRepository authRepository;
-    private final UserMapper userMapper = UserMapper.INSTANCE;
-    private final TokenMapper tokenMapper = TokenMapper.INSTANCE;
     private final JwtUtils tokenUtil;
+
     @Value("${jwt.b2b.subject}")
     private String b2bSubject;
 
