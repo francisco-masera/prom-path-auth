@@ -37,9 +37,12 @@ dependencies {
 
     )
 
+    runtimeOnly 'org.postgresql:postgresql'
+
+    productionRuntimeClasspath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3'
+
     compileOnly(
             'org.springframework.cloud:spring-cloud-starter-sleuth',
-            'com.h2database:h2',
             'org.projectlombok:lombok'
 
     )

@@ -5,7 +5,7 @@ spring:
     vault:
       token: ${VAULT_TOKEN}
       authentication: token
-      uri: http://localhost:8200
+      uri: http://vault:8200
       kv:
         default-context: auth
         backend: secret
@@ -21,7 +21,7 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:8082/eureka/
+      defaultZone: http://discovery-server:8082/eureka/
 logging:
   level:
     root: info
