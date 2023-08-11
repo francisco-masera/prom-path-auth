@@ -5,7 +5,7 @@ spring:
     vault:
       token: ${VAULT_TOKEN}
       authentication: token
-      uri: http://vault:8200
+      uri: http://ghcr.io/dargor94/vault:8200
       kv:
         default-context: auth
         backend: secret
@@ -21,7 +21,7 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://discovery-server:8082/eureka/
+      defaultZone: http://ghcr.io/dargor94/iscovery-server:8082/eureka/
 logging:
   level:
     root: info
