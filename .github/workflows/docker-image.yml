@@ -41,5 +41,5 @@ jobs:
           password: ${{ secrets.DEPLOY_TOKEN }}
       - name: Build the Docker image
         run: |
-          docker build . --file Dockerfile --tag auth-service:latest
-          docker push auth-service:latest
+          docker build . -f Dockerfile -t ghcr.io/dargor94/auth-service:latest
+          docker push ghcr.io/dargor94/auth-service:latest
