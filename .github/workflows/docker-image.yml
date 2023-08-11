@@ -43,4 +43,4 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag auth-service:latest
-          docker push auth-service:latest
+          docker push docker.pkg.github.com/auth-service:latest
