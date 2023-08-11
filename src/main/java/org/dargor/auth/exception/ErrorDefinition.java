@@ -10,7 +10,8 @@ public enum ErrorDefinition {
     ENTITY_NOT_FOUND("Entity not found"),
     PATH_NOT_FOUND("Path not found"),
     UNAUTHORIZED("Access denied"),
-    BUSINESS_ERROR("Business error");
+    BUSINESS_ERROR("Business error"),
+    USER_EXISTS("User already exists");
 
     private final String message;
 

@@ -6,6 +6,7 @@ import org.dargor.auth.dto.LoginRequestDto;
 import org.dargor.auth.dto.SignUpRequestDto;
 import org.dargor.auth.dto.TokenResponseDto;
 import org.dargor.auth.dto.UserResponseDto;
+import org.dargor.auth.exception.CustomException;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
 import org.dargor.auth.util.JwtUtils;
@@ -13,8 +14,6 @@ import org.dargor.auth.util.TokenMapper;
 import org.dargor.auth.util.UserMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 @Slf4j
@@ -31,8 +30,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDto signUp(SignUpRequestDto request) {
+        if (authRepository.findUserByEmail(request.getEmail()).isPresent())
+            throw new CustomException(ErrorDefinition.USER_EXISTS.getMessage(), null);
         var user = userMapper.signUpDtoToUser(request);
-        user.setPassword(tokenUtil.encodePassword(user.getPassword()));
+        user.setPassword(JwtUtils.encodePassword(user.getPassword()));
         var savedUser = authRepository.save(user);
         String token = tokenUtil.generateToken(request.getEmail());
         var response = userMapper.userToUserResponse(savedUser, token);
@@ -43,10 +44,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDto login(LoginRequestDto request) {
-        var user = authRepository.findByEmailAndPassword(request.getEmail(), tokenUtil.encodePassword(request.getPassword())).orElseThrow(() -> {
+        var user = authRepository.getUserByEmail(request.getEmail()).orElseThrow(() -> {
             log.error(String.format("User %s NOT found!", request.getEmail()));
-            return new EntityNotFoundException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage());
+            return new CustomException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage(), null);
         });
+        var passwordsMatches = JwtUtils.passwordMatches(user.getPassword(), request.getPassword());
+        if (!passwordsMatches) {
+            log.info("Passwords did not match");
+            throw new CustomException(ErrorDefinition.UNAUTHORIZED.getMessage(), null);
+        }
         String token = tokenUtil.generateToken(request.getEmail());
         var response = userMapper.userToUserResponse(user, token);
         log.info(String.format("User has successfully logged-in [request: %s] [response: %s]", request, response));

@@ -10,6 +10,7 @@ import java.util.UUID;
 @Repository
 public interface AuthRepository extends JpaRepository<User, UUID> {
 
-    Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
 
 }

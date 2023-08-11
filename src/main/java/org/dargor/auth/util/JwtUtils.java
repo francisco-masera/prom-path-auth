@@ -21,8 +21,16 @@ public class JwtUtils {
     @Value("${jwt.expiresIn}")
     private int expiresIn;
 
-    public static PasswordEncoder passwordEncoder() {
+    private static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
+    }
+
+    public static String encodePassword(String password) {
+        return passwordEncoder().encode(password);
+    }
+
+    public static boolean passwordMatches(String actual, String provided) {
+        return passwordEncoder().matches(provided, actual);
     }
 
     public String generateToken(String subject) {
@@ -36,10 +44,6 @@ public class JwtUtils {
                 .setIssuer(issuer)
                 .signWith(SIGNATURE_ALGORITHM, jwtSecret)
                 .compact();
-    }
-
-    public String encodePassword(String password) {
-        return passwordEncoder().encode(password);
     }
 
 }
