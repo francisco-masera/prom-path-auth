@@ -5,7 +5,7 @@ spring:
     vault:
       token: ${VAULT_TOKEN}
       authentication: token
-      uri: http://ghcr.io/dargor94/vault:8200
+      uri: http://vault:8200
       kv:
         default-context: auth
         backend: secret
