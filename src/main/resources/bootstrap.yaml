@@ -21,7 +21,7 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://ghcr.io/dargor94/iscovery-server:8082/eureka/
+      defaultZone: http://discovery-server:8082/eureka/
 logging:
   level:
     root: info
