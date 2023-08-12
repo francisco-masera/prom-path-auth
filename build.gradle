@@ -28,9 +28,9 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.cloud:spring-cloud-starter-config',
             'org.springframework.cloud:spring-cloud-starter-bootstrap',
+            'org.springframework.cloud:spring-cloud-starter-bootstrap',
             'org.springframework.cloud:spring-cloud-starter-vault-config',
             'org.springframework.cloud:spring-cloud-config-client',
-            'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.8.RELEASE',
             'io.jsonwebtoken:jjwt:0.9.1',
             'org.mapstruct:mapstruct:1.5.5.Final',
             'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:3.3.1',
@@ -42,7 +42,6 @@ dependencies {
     productionRuntimeClasspath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3'
 
     compileOnly(
-            'org.springframework.cloud:spring-cloud-starter-sleuth',
             'org.projectlombok:lombok'
 
     )
