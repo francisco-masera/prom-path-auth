@@ -17,9 +17,3 @@ spring:
         max-attempts: 5
         max-interval: 1500
 server.port: 8081
-opentracing:
-  jaeger:
-    udp-sender:
-      host: localhost
-      port: 6831
-    log-spans: true
