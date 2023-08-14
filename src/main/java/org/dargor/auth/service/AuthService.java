@@ -2,7 +2,6 @@ package org.dargor.auth.service;
 
 import org.dargor.auth.dto.LoginRequestDto;
 import org.dargor.auth.dto.SignUpRequestDto;
-import org.dargor.auth.dto.TokenResponseDto;
 import org.dargor.auth.dto.UserResponseDto;
 
 public interface AuthService {
@@ -11,6 +10,5 @@ public interface AuthService {
 
     UserResponseDto login(LoginRequestDto request);
 
-    TokenResponseDto getB2BToken();
 
 }
