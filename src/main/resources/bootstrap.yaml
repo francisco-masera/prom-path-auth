@@ -17,10 +17,3 @@ spring:
         max-attempts: 5
         max-interval: 1500
 server.port: 8081
-#azure:
-#  keyvault:
-#    enabled: true
-#    uri: https://first-ms-vault.vault.azure.net/
-#    client-key: YyJ8Q~MnRrp32V6yu5hHJHj4XltV~~sWOFSFtaAf
-#    client-id: e7d16864-1f98-4e5b-a99a-e523598b3ebe
-#    tenant-id: d514b9c0-d478-40e3-b096-69e5874722c0
