@@ -14,11 +14,11 @@ public class JwtUtils {
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
-    @Value("${jwt-secret}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
-    @Value("${jwt-issuer}")
+    @Value("${jwt.issuer}")
     private String issuer;
-    @Value("${jwt-expiresIn}")
+    @Value("${jwt.expiresIn}")
     private int expiresIn;
 
     private static PasswordEncoder passwordEncoder() {
