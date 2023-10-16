@@ -2,13 +2,13 @@ spring:
   application.name: auth-svc
   profiles.active: dev
   cloud:
-#    vault:
-#      token: ${VAULT_TOKEN}
-#      authentication: token
-#      uri: http://vault:8200
-#      kv:
-#        default-context: auth
-#        backend: secret
+    vault:
+      token: ${VAULT_TOKEN}
+      authentication: token
+      uri: http://vault:8200
+      kv:
+        default-context: auth
+        backend: secret
     config:
       enabled: true
       fail-fast: true
