@@ -1,7 +1,7 @@
 package org.dargor.auth.util;
 
-import org.dargor.auth.dto.SignUpRequestDto;
-import org.dargor.auth.dto.UserResponseDto;
+import org.dargor.auth.dto.request.SignUpRequestDto;
+import org.dargor.auth.dto.response.UserResponseDto;
 import org.dargor.auth.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

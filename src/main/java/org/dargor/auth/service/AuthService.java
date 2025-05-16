@@ -1,8 +1,8 @@
 package org.dargor.auth.service;
 
-import org.dargor.auth.dto.LoginRequestDto;
-import org.dargor.auth.dto.SignUpRequestDto;
-import org.dargor.auth.dto.UserResponseDto;
+import org.dargor.auth.dto.request.LoginRequestDto;
+import org.dargor.auth.dto.request.SignUpRequestDto;
+import org.dargor.auth.dto.response.UserResponseDto;
 
 public interface AuthService {
 

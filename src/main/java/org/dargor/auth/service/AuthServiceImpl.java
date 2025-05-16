@@ -1,16 +1,18 @@
 package org.dargor.auth.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.dargor.auth.dto.LoginRequestDto;
-import org.dargor.auth.dto.SignUpRequestDto;
-import org.dargor.auth.dto.UserResponseDto;
+import org.dargor.auth.dto.request.LoginRequestDto;
+import org.dargor.auth.dto.request.SignUpRequestDto;
+import org.dargor.auth.dto.response.UserResponseDto;
+import org.dargor.auth.entity.User;
 import org.dargor.auth.exception.CustomException;
 import org.dargor.auth.exception.ErrorDefinition;
 import org.dargor.auth.repository.AuthRepository;
 import org.dargor.auth.util.JwtUtils;
 import org.dargor.auth.util.UserMapper;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -24,32 +26,33 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDto signUp(SignUpRequestDto request) {
-        if (authRepository.findUserByEmail(request.getEmail()).isPresent())
-            throw new CustomException(ErrorDefinition.USER_EXISTS.getMessage(), null);
-        var user = userMapper.signUpDtoToUser(request);
+        if (authRepository.getUserByEmail(request.getEmail()).isPresent()) {
+            throw new CustomException(ErrorDefinition.USER_EXISTS);
+        }
+        User user = userMapper.signUpDtoToUser(request);
         user.setPassword(JwtUtils.encodePassword(user.getPassword()));
-        var savedUser = authRepository.save(user);
+        User savedUser = authRepository.save(user);
         String token = tokenUtil.generateToken(request.getEmail());
-        var response = userMapper.userToUserResponse(savedUser, token);
-        log.info(String.format("User created successfully [request: %s] [response: %s]", request, response));
+        UserResponseDto response = userMapper.userToUserResponse(savedUser, token);
+        log.info("User created successfully [request: {}] [response: {}]", request, response);
         return response;
 
     }
 
     @Override
     public UserResponseDto login(LoginRequestDto request) {
-        var user = authRepository.getUserByEmail(request.getEmail()).orElseThrow(() -> {
-            log.error(String.format("User %s NOT found!", request.getEmail()));
-            return new CustomException(ErrorDefinition.ENTITY_NOT_FOUND.getMessage(), null);
+        User user = authRepository.getUserByEmail(request.getEmail()).orElseThrow(() -> {
+            log.error("User {} NOT found!", request.getEmail());
+            return new CustomException(ErrorDefinition.ENTITY_NOT_FOUND);
         });
-        var passwordsMatches = JwtUtils.passwordMatches(user.getPassword(), request.getPassword());
+        boolean passwordsMatches = JwtUtils.passwordMatches(user.getPassword(), request.getPassword());
         if (!passwordsMatches) {
             log.info("Passwords did not match");
-            throw new CustomException(ErrorDefinition.UNAUTHORIZED.getMessage(), null);
+            throw new CustomException(ErrorDefinition.UNAUTHORIZED);
         }
         String token = tokenUtil.generateToken(request.getEmail());
-        var response = userMapper.userToUserResponse(user, token);
-        log.info(String.format("User has successfully logged-in [request: %s] [response: %s]", request, response));
+        UserResponseDto response = userMapper.userToUserResponse(user, token);
+        log.info("User has successfully logged-in [request: {}] [response: {}]", request, response);
         return response;
     }
 

@@ -1,4 +1,4 @@
-package org.dargor.auth.dto;
+package org.dargor.auth.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

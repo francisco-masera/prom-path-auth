@@ -1,9 +1,9 @@
 package org.dargor.auth.controller;
 
 import lombok.AllArgsConstructor;
-import org.dargor.auth.dto.LoginRequestDto;
-import org.dargor.auth.dto.SignUpRequestDto;
-import org.dargor.auth.dto.UserResponseDto;
+import org.dargor.auth.dto.request.LoginRequestDto;
+import org.dargor.auth.dto.request.SignUpRequestDto;
+import org.dargor.auth.dto.response.UserResponseDto;
 import org.dargor.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

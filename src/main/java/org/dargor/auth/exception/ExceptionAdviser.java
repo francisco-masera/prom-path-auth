@@ -1,14 +1,15 @@
 package org.dargor.auth.exception;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
@@ -18,22 +19,23 @@ public class ExceptionAdviser {
     public final ResponseEntity<ErrorResponse> argsNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
-        var error = new ErrorResponse(String.format("%s: %s", ErrorDefinition.INVALID_FIELDS.getMessage(), errors), HttpStatus.BAD_REQUEST.value());
-        log.error(String.format("Exception found with code %s for field validation didn't passed.", error.getCode()));
+        ErrorResponse error = new ErrorResponse(String.format("%s: %s", ErrorDefinition.INVALID_FIELDS.getMessage(), errors),
+              HttpStatus.BAD_REQUEST.value());
+        log.error("Exception found with code {} for field validation didn't passed.", error.getCode());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomException.class)
     public final ResponseEntity<ErrorResponse> customException(CustomException ex) {
-        var error = new ErrorResponse(ex.getMessage(), ex.getCode());
-        log.error(String.format("Exception found with code %d.", error.getCode()));
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), ex.getCode());
+        log.error("Exception found with code {}.", error.getCode());
         return new ResponseEntity<>(error, null, error.getCode());
     }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorResponse> genericError() {
-        var error = new ErrorResponse(ErrorDefinition.UNKNOWN_ERROR.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-        log.error(String.format("Exception found with code %d.", error.getCode()));
+        ErrorResponse error = new ErrorResponse(ErrorDefinition.UNKNOWN_ERROR.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        log.error("Exception found with code {}.", error.getCode());
         return new ResponseEntity<>(error, null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
